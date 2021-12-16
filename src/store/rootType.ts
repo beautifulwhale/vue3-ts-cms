@@ -1,5 +1,9 @@
-interface IRootType {
+import ILoginType from './login/type'
+export interface IRootType {
   name: string
   age: number
 }
-export default IRootType
+export interface MoundleType {
+  loginMoudle: ILoginType
+}
+export type IStoreType = IRootType & MoundleType

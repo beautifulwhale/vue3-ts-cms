@@ -6,7 +6,8 @@ import 'normalize.css'
 import './assets/css/base.css'
 import { globalRegister } from './global'
 import { localLogin } from './store'
-localLogin()
 const app = createApp(App)
 globalRegister(app)
-app.use(router).use(store).mount('#app')
+localLogin()
+app.use(router).use(store)
+app.mount('#app')

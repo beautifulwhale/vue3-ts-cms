@@ -1,6 +1,7 @@
 import { Module } from 'vuex'
 import ILoginType from './type'
-import IRootType from '../roottype'
+import { IRootType } from '../rootType'
+import mapMenuRoutes from '../../utils/map-menu-routes'
 import {
   loginRequest,
   requestUserInfoById,
@@ -26,6 +27,12 @@ const loginMoudle: Module<ILoginType, IRootType> = {
     },
     changeUserMenu(state, userMenu: any) {
       state.userMenu = userMenu
+      //6.根据用户类型动态加载路由
+      const routes = mapMenuRoutes(userMenu)
+      routes.forEach((route) => {
+        //添加到某个路由的子路由中，通过name属性
+        router.addRoute('main', route)
+      })
     }
   },
   actions: {
