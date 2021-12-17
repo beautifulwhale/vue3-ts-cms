@@ -1,22 +1,37 @@
 <template>
   <div class="user">
-    <my-form-vue v-bind="searchForm"></my-form-vue>
+    <page-search-vue :formConfig="searchForm"></page-search-vue>
+    <page-content-vue
+      pageName="users"
+      :content-table-config="contentTableConfig"
+    ></page-content-vue>
   </div>
 </template>
 
 <script lang="ts">
 import { defineComponent } from 'vue'
-import myFormVue from '@/base-ui/form/src/my-form.vue'
+import pageContentVue from '@/components/page-content/src/page-content.vue'
+import pageSearchVue from '@/components/page-search/src/page-search.vue'
+import { contentTableConfig } from './config/content-config'
 import { searchForm } from './config/search-config'
 export default defineComponent({
   name: 'user',
   components: {
-    myFormVue
+    pageSearchVue,
+    pageContentVue
   },
   setup() {
-    return { searchForm }
+    return { searchForm, contentTableConfig }
   }
 })
 </script>
 
-<style scoped></style>
+<style scoped>
+.btns {
+  text-align: right;
+  padding: 0 50px 20px 0;
+}
+.user-list {
+  margin-top: 30px;
+}
+</style>

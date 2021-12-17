@@ -34,7 +34,6 @@ export default defineComponent({
       const breadCrumbs = mapBreadMenu(userMenu, route.path)
       return breadCrumbs
     })
-    console.log(breadCrumbs)
     const changeFold = () => {
       isFold.value = !isFold.value
       emit('foldAction', isFold.value)

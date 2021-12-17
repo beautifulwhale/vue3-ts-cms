@@ -1,5 +1,8 @@
 <template>
   <div class="my-form">
+    <div class="header">
+      <slot name="header"></slot>
+    </div>
     <el-form :label-width="labelWidth">
       <el-row>
         <template v-for="item in formItems" :key="item.label">
@@ -11,11 +14,12 @@
                 <el-input
                   :placeholder="item.placeholder"
                   :show-password="item.type === 'password'"
+                  v-model="formdata[`${item.field}`]"
                 >
                 </el-input>
               </template>
               <template v-if="item.type === 'select'">
-                <el-select>
+                <el-select v-model="formdata[`${item.field}`]">
                   <el-option
                     v-for="option in item.options"
                     :key="option.value"
@@ -27,6 +31,7 @@
                 <el-date-picker
                   v-bind="item.otherOptions"
                   style="width: 100%"
+                  v-model="formdata[`${item.field}`]"
                 ></el-date-picker>
               </template>
             </el-form-item>
@@ -34,14 +39,21 @@
         </template>
       </el-row>
     </el-form>
+    <div class="footer">
+      <slot name="footer"></slot>
+    </div>
   </div>
 </template>
 
 <script lang="ts">
-import { defineComponent, PropType } from 'vue'
+import { defineComponent, PropType, ref, watch } from 'vue'
 import IFormItem from './type'
 export default defineComponent({
   props: {
+    modelValue: {
+      type: Object,
+      required: true
+    },
     formItems: {
       type: Array as PropType<IFormItem[]>,
       default: () => []
@@ -66,6 +78,27 @@ export default defineComponent({
         xs: 24
       })
     }
+  },
+  emits: ['update:modelValue'],
+  setup(props, { emit }) {
+    //这里解构modelValue并且复制粘贴到新的对象formData，目的是不影响原来的modelValue
+    const formdata = ref({ ...props.modelValue })
+    watch(
+      () => props.modelValue,
+      (newValue: any) => {
+        formdata.value = { ...newValue }
+      }
+    )
+    watch(
+      formdata,
+      (newValue: any) => {
+        emit('update:modelValue', newValue)
+      },
+      {
+        deep: true
+      }
+    )
+    return { formdata }
   }
 })
 </script>

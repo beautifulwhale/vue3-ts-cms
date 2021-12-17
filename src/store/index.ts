@@ -1,6 +1,7 @@
 import { createStore, Store, useStore as useStoreRaw } from 'vuex'
 import loginMoudle from './login/login'
 import { IStoreType, IRootType } from './rootType'
+import { system } from './system/system'
 const store = createStore<IRootType>({
   state() {
     return {
@@ -9,7 +10,8 @@ const store = createStore<IRootType>({
     }
   },
   modules: {
-    loginMoudle
+    loginMoudle,
+    system
   }
 })
 export function localLogin() {
