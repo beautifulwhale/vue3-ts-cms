@@ -7,23 +7,29 @@
       <el-row>
         <template v-for="item in formItems" :key="item.label">
           <el-col v-bind="colLayout">
-            <el-form-item :label="item.label" :style="itemStyle">
+            <el-form-item
+              :label="item.label"
+              :style="itemStyle"
+              v-if="!item.isHidden"
+            >
               <template
                 v-if="item.type === 'input' || item.type === 'password'"
               >
                 <el-input
                   :placeholder="item.placeholder"
                   :show-password="item.type === 'password'"
-                  v-model="formdata[`${item.field}`]"
+                  v-model="formData[`${item.field}`]"
                 >
                 </el-input>
               </template>
               <template v-if="item.type === 'select'">
-                <el-select v-model="formdata[`${item.field}`]">
+                <el-select v-model="formData[`${item.field}`]">
                   <el-option
                     v-for="option in item.options"
                     :key="option.value"
                     :value="option.value"
+                    :label="option.title"
+                    v-model="formData[`${item.field}`]"
                   ></el-option>
                 </el-select>
               </template>
@@ -31,7 +37,7 @@
                 <el-date-picker
                   v-bind="item.otherOptions"
                   style="width: 100%"
-                  v-model="formdata[`${item.field}`]"
+                  v-model="formData[`${item.field}`]"
                 ></el-date-picker>
               </template>
             </el-form-item>
@@ -82,15 +88,9 @@ export default defineComponent({
   emits: ['update:modelValue'],
   setup(props, { emit }) {
     //这里解构modelValue并且复制粘贴到新的对象formData，目的是不影响原来的modelValue
-    const formdata = ref({ ...props.modelValue })
+    const formData = ref({ ...props.modelValue })
     watch(
-      () => props.modelValue,
-      (newValue: any) => {
-        formdata.value = { ...newValue }
-      }
-    )
-    watch(
-      formdata,
+      formData,
       (newValue: any) => {
         emit('update:modelValue', newValue)
       },
@@ -98,7 +98,7 @@ export default defineComponent({
         deep: true
       }
     )
-    return { formdata }
+    return { formData }
   }
 })
 </script>

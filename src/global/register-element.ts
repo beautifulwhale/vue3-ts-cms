@@ -29,7 +29,9 @@ import {
   ElBreadcrumbItem,
   ElTable,
   ElTableColumn,
-  ElPagination
+  ElPagination,
+  ElImage,
+  ElDialog
 } from 'element-plus'
 import 'element-plus/dist/index.css'
 
@@ -64,7 +66,9 @@ export default function registerElement(app: App): void {
     ElBreadcrumbItem,
     ElTable,
     ElTableColumn,
-    ElPagination
+    ElPagination,
+    ElImage,
+    ElDialog
   ]
   for (const component of components) {
     app.component(component.name, component)

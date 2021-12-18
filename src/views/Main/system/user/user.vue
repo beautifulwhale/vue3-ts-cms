@@ -1,27 +1,90 @@
 <template>
   <div class="user">
-    <page-search-vue :formConfig="searchForm"></page-search-vue>
+    <page-search-vue
+      :formConfig="searchForm"
+      @searchBtnClick="searchBtnClick"
+    ></page-search-vue>
     <page-content-vue
       pageName="users"
       :content-table-config="contentTableConfig"
+      ref="pageContentRef"
+      @new-click="newClick"
+      @edit-click="editClick"
     ></page-content-vue>
+    <page-modal-vue
+      :modalConfig="modalConfigRef"
+      :defaultModal="defaultModal"
+      pageName="users"
+      ref="pageModalRef"
+    ></page-modal-vue>
   </div>
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue'
+import { defineComponent, ref, computed } from 'vue'
 import pageContentVue from '@/components/page-content/src/page-content.vue'
 import pageSearchVue from '@/components/page-search/src/page-search.vue'
+import pageModalVue from '@/components/page-modal/page-modal.vue'
 import { contentTableConfig } from './config/content-config'
 import { searchForm } from './config/search-config'
+import { modalConfig } from './config/modal-config'
+import { usePageModal } from '../../../../hooks/userPageModal'
+import { useStore } from '../../../../store'
 export default defineComponent({
   name: 'user',
   components: {
     pageSearchVue,
-    pageContentVue
+    pageContentVue,
+    pageModalVue
   },
   setup() {
-    return { searchForm, contentTableConfig }
+    const pageContentRef = ref<InstanceType<typeof pageContentVue>>()
+    const searchBtnClick = (formData: any) => {
+      pageContentRef.value?.getPageDatas(formData)
+    }
+    const newCallBack = () => {
+      const passwordItem = modalConfig.formItems?.find(
+        (item) => item.field === 'password'
+      )
+      passwordItem!.isHidden = false
+    }
+    const editCallBack = () => {
+      const passwordItem = modalConfig.formItems?.find(
+        (item) => item.field === 'password'
+      )
+      passwordItem!.isHidden = true
+    }
+    const modalConfigRef = computed(() => {
+      const departmentItem = modalConfig.formItems?.find(
+        (item) => item.field === 'departmentId'
+      )
+      const store = useStore()
+      departmentItem!.options = store.state.allDepartment.map((item) => {
+        return { title: item.name, value: item.id }
+      })
+      const roleItem = modalConfig.formItems?.find(
+        (item) => item.field === 'roleId'
+      )
+      roleItem!.options = store.state.allRole.map((item) => {
+        return { title: item.name, value: item.id }
+      })
+      return modalConfig
+    })
+    const [newClick, editClick, pageModalRef, defaultModal] = usePageModal(
+      newCallBack,
+      editCallBack
+    )
+    return {
+      searchForm,
+      contentTableConfig,
+      searchBtnClick,
+      pageContentRef,
+      modalConfigRef,
+      newClick,
+      editClick,
+      pageModalRef,
+      defaultModal
+    }
   }
 })
 </script>

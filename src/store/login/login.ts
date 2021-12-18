@@ -1,7 +1,7 @@
 import { Module } from 'vuex'
 import ILoginType from './type'
 import { IRootType } from '../rootType'
-import mapMenuRoutes from '../../utils/map-menu-routes'
+import { mapMenuRoutes, mapMenuPermissions } from '../../utils/map-menu-routes'
 import {
   loginRequest,
   requestUserInfoById,
@@ -15,7 +15,8 @@ const loginMoudle: Module<ILoginType, IRootType> = {
     return {
       token: '',
       userInfo: {},
-      userMenu: []
+      userMenu: [],
+      permission: []
     }
   },
   mutations: {
@@ -33,6 +34,9 @@ const loginMoudle: Module<ILoginType, IRootType> = {
         //添加到某个路由的子路由中，通过name属性
         router.addRoute('main', route)
       })
+      //获取用户按钮权限
+      const permissions = mapMenuPermissions(userMenu)
+      state.permission = permissions
     }
   },
   actions: {

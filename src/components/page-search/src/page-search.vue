@@ -5,7 +5,7 @@
       <template #footer>
         <div class="btns">
           <el-button @click="handleResetClick">重置</el-button>
-          <el-button type="primary">检索</el-button>
+          <el-button type="primary" @click="searchClick">检索</el-button>
         </div>
       </template>
     </my-form-vue>
@@ -25,7 +25,8 @@ export default defineComponent({
   components: {
     myFormVue
   },
-  setup(props) {
+  emits: ['searchBtnClick'],
+  setup(props, { emit }) {
     //双向绑定的属性应该是由配置文件中的field来决定的
     // 优化1：formData中的属性应该动态来决定
     const formItems = props.formConfig.formItems ?? []
@@ -38,13 +39,15 @@ export default defineComponent({
     // 优化二：当用户点击重置
     const handleResetClick = () => {
       // formData.value = formOriginData 如果是这样的方法，因为...props.modelvalue是浅拷贝,不能改变子组件的值
-      //UOU for (const key in formOriginData) {
-      //   formData.value[`${key}`] = formOriginData[key]
-      // }
+      for (const key in formDataRaw) {
+        formData.value[`${key}`] = formDataRaw[key]
+      }
       formData.value = formDataRaw
     }
-
-    return { formData, handleResetClick }
+    const searchClick = () => {
+      emit('searchBtnClick', formData.value)
+    }
+    return { formData, handleResetClick, searchClick }
   }
 })
 </script>

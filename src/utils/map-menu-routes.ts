@@ -1,7 +1,7 @@
 import { RouteRecordRaw } from 'vue-router'
 import IBreadCrumb from '../base-ui/bread-crumb/type'
 let firstMenu: any = null
-export default function mapMenuRoutes(userMenu: any[]): RouteRecordRaw[] {
+export function mapMenuRoutes(userMenu: any[]): RouteRecordRaw[] {
   const routes: RouteRecordRaw[] = []
   const allRoutes: RouteRecordRaw[] = []
   //1.先去默认加载所有的路由
@@ -31,6 +31,7 @@ export default function mapMenuRoutes(userMenu: any[]): RouteRecordRaw[] {
   return routes
 }
 export { firstMenu }
+//获取当前高亮路由
 export function mapMenuAcive(
   menus: any[],
   currentPath: string,
@@ -53,4 +54,19 @@ export function mapBreadMenu(userMenu: any[], currentPath: string) {
   const breadData: IBreadCrumb[] = []
   mapMenuAcive(userMenu, currentPath, breadData)
   return breadData
+}
+//判断用户权限
+export function mapMenuPermissions(userMenu: any[]) {
+  const permissions: string[] = []
+  const resourcePermission = (menus: any[]) => {
+    for (const menu of menus) {
+      if (menu.type === 1 || menu.type === 2) {
+        resourcePermission(menu.children ?? [])
+      } else if (menu.type === 3) {
+        permissions.push(menu.permission)
+      }
+    }
+  }
+  resourcePermission(userMenu)
+  return permissions
 }

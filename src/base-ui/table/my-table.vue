@@ -1,8 +1,16 @@
 <template>
   <div class="table">
-    <el-table :data="listData" border style="width: 100%">
+    <div class="header">
+      <slot name="handleNew"></slot>
+    </div>
+    <el-table
+      :data="listData"
+      border
+      style="width: 100%"
+      v-bind="childrenConfig"
+    >
       <template v-for="item in proplist" :key="item.prop">
-        <el-table-column v-bind="item" align="center">
+        <el-table-column v-bind="item" align="center" show-overflow-tooltip>
           <template #default="scope">
             <slot :name="item.slotname" :row="scope.row">
               {{ scope.row[item.prop] }}
@@ -28,8 +36,18 @@ export default defineComponent({
     proplist: {
       type: Array,
       default: () => []
+    },
+    childrenConfig: {
+      type: Object,
+      default: () => ({})
     }
   }
 })
 </script>
-<style lang="less" scoped></style>
+<style lang="less" scoped>
+.header {
+  margin-top: 20px;
+  margin-bottom: 20px;
+  margin-left: 900px;
+}
+</style>

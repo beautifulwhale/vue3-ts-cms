@@ -1,7 +1,12 @@
 import { Module } from 'vuex'
 import { IRootType } from '../rootType'
 import ISystemType from './type'
-import getPageList from '@/service/system/system'
+import {
+  getPageList,
+  deletePagedare,
+  newPageAction,
+  editPageAction
+} from '@/service/system/system'
 export const system: Module<ISystemType, IRootType> = {
   namespaced: true,
   state: () => {
@@ -9,7 +14,11 @@ export const system: Module<ISystemType, IRootType> = {
       userList: [],
       userTotal: 0,
       roleList: [],
-      roleTotal: 0
+      roleTotal: 0,
+      goodsList: [],
+      goodsTotal: 0,
+      menuList: [],
+      menuTotal: 0
     }
   },
   getters: {
@@ -20,6 +29,10 @@ export const system: Module<ISystemType, IRootType> = {
             return state.userList
           case 'role':
             return state.roleList
+          case 'goods':
+            return state.goodsList
+          case 'menu':
+            return state.menuList
           default:
             break
         }
@@ -38,6 +51,18 @@ export const system: Module<ISystemType, IRootType> = {
     },
     changeRoleTotal(state, payload) {
       state.roleTotal = payload
+    },
+    changeGoodsList(state, payload) {
+      state.goodsList = payload
+    },
+    changeGoodsTotal(state, payload) {
+      state.goodsTotal = payload
+    },
+    changeMenuList(state, payload) {
+      state.menuList = payload
+    },
+    changeMenuTotal(state, payload) {
+      state.menuTotal = payload
     }
   },
   actions: {
@@ -55,9 +80,59 @@ export const system: Module<ISystemType, IRootType> = {
           commit('changeRoleList', list)
           commit('changeRoleTotal', totalCount)
           break
+        case 'goods':
+          commit('changeGoodsList', list)
+          commit('changeGoodsTotal', totalCount)
+          break
+        case 'menu':
+          commit('changeMenuList', list)
+          commit('changeMenuTotal', totalCount)
+          break
         default:
           break
       }
+    },
+    async deleteData({ dispatch }, payload) {
+      const pageName = payload.pageName
+      const id = payload.id
+      const pageUrl = `/${pageName}/${id}`
+      await deletePagedare(pageUrl)
+      dispatch('getPageListAction', {
+        pageName,
+        queryInfo: {
+          offset: 0,
+          size: 1000
+        }
+      })
+    },
+    //新建用户
+    async newHandle({ dispatch }, payload) {
+      const pageUrl = `/${payload.pageName}`
+      const queryInfo = payload.newData
+      console.log(queryInfo)
+      const res = await newPageAction(pageUrl, queryInfo)
+      console.log(res)
+      //重新更新数据
+      dispatch('getPageListAction', {
+        pageName: payload.pageName,
+        queryInfo: {
+          offset: 0,
+          size: 1000
+        }
+      })
+    },
+    async editHandle({ dispatch }, payload) {
+      const pageUrl = `/${payload.pageName}/${payload.id}`
+      const queryInfo = payload.editData
+      const res = await editPageAction(pageUrl, queryInfo)
+      console.log(res)
+      dispatch('getPageListAction', {
+        pageName: payload.pageName,
+        queryInfo: {
+          offset: 0,
+          size: 1000
+        }
+      })
     }
   }
 }

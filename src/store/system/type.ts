@@ -3,4 +3,8 @@ export default interface ISystemType {
   userTotal: number
   roleList: any[]
   roleTotal: number
+  goodsList: any[]
+  goodsTotal: number
+  menuList: any[]
+  menuTotal: number
 }
