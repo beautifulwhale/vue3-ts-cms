@@ -101,7 +101,7 @@ export const system: Module<ISystemType, IRootType> = {
         pageName,
         queryInfo: {
           offset: 0,
-          size: 1000
+          size: 10
         }
       })
     },
@@ -109,28 +109,25 @@ export const system: Module<ISystemType, IRootType> = {
     async newHandle({ dispatch }, payload) {
       const pageUrl = `/${payload.pageName}`
       const queryInfo = payload.newData
-      console.log(queryInfo)
-      const res = await newPageAction(pageUrl, queryInfo)
-      console.log(res)
+      await newPageAction(pageUrl, queryInfo)
       //重新更新数据
       dispatch('getPageListAction', {
         pageName: payload.pageName,
         queryInfo: {
           offset: 0,
-          size: 1000
+          size: 10
         }
       })
     },
     async editHandle({ dispatch }, payload) {
       const pageUrl = `/${payload.pageName}/${payload.id}`
       const queryInfo = payload.editData
-      const res = await editPageAction(pageUrl, queryInfo)
-      console.log(res)
+      await editPageAction(pageUrl, queryInfo)
       dispatch('getPageListAction', {
         pageName: payload.pageName,
         queryInfo: {
           offset: 0,
-          size: 1000
+          size: 10
         }
       })
     }

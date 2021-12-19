@@ -83,7 +83,7 @@ export default defineComponent({
     const isQuery = getPermissions(props.pageName, 'query')
     const isUpdate = getPermissions(props.pageName, 'update')
     const isDelete = getPermissions(props.pageName, 'delete')
-    const getPageDatas = (queryInfo: any = {}) => {
+    const getPageData = (queryInfo: any = {}) => {
       if (!isQuery) return
       store.dispatch('system/getPageListAction', {
         pageName: props.pageName,
@@ -94,7 +94,7 @@ export default defineComponent({
         }
       })
     }
-    getPageDatas()
+    getPageData()
     const dataList = computed(() =>
       store.getters['system/getPageData'](props.pageName)
     )
@@ -110,7 +110,6 @@ export default defineComponent({
     )
     const userTotal = computed(() => store.state.system.userTotal)
     const deleteClick = (row: any) => {
-      console.log(row)
       store.dispatch('system/deleteData', {
         pageName: props.pageName,
         id: row.id
@@ -125,7 +124,7 @@ export default defineComponent({
     return {
       dataList,
       userTotal,
-      getPageDatas,
+      getPageData,
       otherSlots,
       isUpdate,
       isDelete,

@@ -6,5 +6,5 @@ export default function formatTime(
   value: string,
   format: string = DAFAULT_FORMAT
 ) {
-  return dayjs.utc(value).format(format)
+  return dayjs.utc(value).utcOffset(8).format(format)
 }

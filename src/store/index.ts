@@ -2,18 +2,21 @@ import { createStore, Store, useStore as useStoreRaw } from 'vuex'
 import loginMoudle from './login/login'
 import { IStoreType, IRootType } from './rootType'
 import { system } from './system/system'
+import { analysis } from './analysis/dashboard'
 import { getPageList } from '../service/system/system'
 const store = createStore<IRootType>({
   modules: {
     loginMoudle,
-    system
+    system,
+    analysis
   },
   state() {
     return {
       name: 'coderwhy',
       age: 12,
       allDepartment: [],
-      allRole: []
+      allRole: [],
+      allMenu: []
     }
   },
   mutations: {
@@ -22,6 +25,9 @@ const store = createStore<IRootType>({
     },
     changeRole(state, list) {
       state.allRole = list
+    },
+    changeMenu(state, list) {
+      state.allMenu = list
     }
   },
   actions: {
@@ -30,14 +36,17 @@ const store = createStore<IRootType>({
         offset: 0,
         size: 1000
       })
+      const { list: departments } = departMentResult.data
+      commit('changeDepartment', departments)
       const roleResult = await getPageList('/role/list', {
         offset: 0,
         size: 1000
       })
-      const { list: departments } = departMentResult.data
       const { list: roles } = roleResult.data
-      commit('changeDepartment', departments)
       commit('changeRole', roles)
+      const menuResult = await getPageList('/menu/list', {})
+      const { list: menus } = menuResult.data
+      commit('changeMenu', menus)
     }
   }
 })

@@ -70,3 +70,18 @@ export function mapMenuPermissions(userMenu: any[]) {
   resourcePermission(userMenu)
   return permissions
 }
+//映射角色的权限
+export function mapMenuCheckKeys(userMenu: any) {
+  const checkLeaf: number[] = []
+  const recurseCheckLeaf = (menus: any) => {
+    for (const menu of menus) {
+      if (menu.children) {
+        recurseCheckLeaf(menu.children)
+      } else {
+        checkLeaf.push(menu.id)
+      }
+    }
+  }
+  recurseCheckLeaf(userMenu)
+  return checkLeaf
+}

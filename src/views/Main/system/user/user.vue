@@ -2,7 +2,7 @@
   <div class="user">
     <page-search-vue
       :formConfig="searchForm"
-      @searchBtnClick="searchBtnClick"
+      @handleQueryClick="handleQueryClick"
     ></page-search-vue>
     <page-content-vue
       pageName="users"
@@ -21,7 +21,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, computed } from 'vue'
+import { defineComponent, computed } from 'vue'
 import pageContentVue from '@/components/page-content/src/page-content.vue'
 import pageSearchVue from '@/components/page-search/src/page-search.vue'
 import pageModalVue from '@/components/page-modal/page-modal.vue'
@@ -30,6 +30,7 @@ import { searchForm } from './config/search-config'
 import { modalConfig } from './config/modal-config'
 import { usePageModal } from '../../../../hooks/userPageModal'
 import { useStore } from '../../../../store'
+import { usePageSearch } from '../../../../hooks/use-page-search'
 export default defineComponent({
   name: 'user',
   components: {
@@ -38,10 +39,7 @@ export default defineComponent({
     pageModalVue
   },
   setup() {
-    const pageContentRef = ref<InstanceType<typeof pageContentVue>>()
-    const searchBtnClick = (formData: any) => {
-      pageContentRef.value?.getPageDatas(formData)
-    }
+    const [pageContentRef, handleQueryClick] = usePageSearch()
     const newCallBack = () => {
       const passwordItem = modalConfig.formItems?.find(
         (item) => item.field === 'password'
@@ -54,6 +52,7 @@ export default defineComponent({
       )
       passwordItem!.isHidden = true
     }
+    //获取select的数据 使用computed可以使得数据响应式
     const modalConfigRef = computed(() => {
       const departmentItem = modalConfig.formItems?.find(
         (item) => item.field === 'departmentId'
@@ -77,7 +76,7 @@ export default defineComponent({
     return {
       searchForm,
       contentTableConfig,
-      searchBtnClick,
+      handleQueryClick,
       pageContentRef,
       modalConfigRef,
       newClick,

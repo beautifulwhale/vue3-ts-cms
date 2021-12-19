@@ -31,7 +31,9 @@ import {
   ElTableColumn,
   ElPagination,
   ElImage,
-  ElDialog
+  ElDialog,
+  ElTree,
+  ElCard
 } from 'element-plus'
 import 'element-plus/dist/index.css'
 
@@ -68,7 +70,9 @@ export default function registerElement(app: App): void {
     ElTableColumn,
     ElPagination,
     ElImage,
-    ElDialog
+    ElDialog,
+    ElTree,
+    ElCard
   ]
   for (const component of components) {
     app.component(component.name, component)

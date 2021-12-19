@@ -1,6 +1,7 @@
 <template>
   <el-dialog v-model="dialogVisible" title="Tips" width="30%" destroy-on-close>
     <my-form-vue v-bind="modalConfig" v-model="formData"></my-form-vue>
+    <slot></slot>
     <template #footer>
       <span class="dialog-footer">
         <el-button @click="dialogVisible = false">Cancel</el-button>
@@ -27,6 +28,10 @@ export default defineComponent({
     pageName: {
       type: String,
       required: true
+    },
+    otherValue: {
+      type: Object,
+      default: () => ({})
     }
   },
   components: {
@@ -49,14 +54,13 @@ export default defineComponent({
       if (Object.keys(props.defaultModal).length) {
         store.dispatch('system/editHandle', {
           pageName: props.pageName,
-          editData: { ...formData.value },
+          editData: { ...formData.value, ...props.otherValue },
           id: props.defaultModal.id
         })
       } else {
-        console.log(formData.value)
         store.dispatch('system/newHandle', {
           pageName: props.pageName,
-          newData: { ...formData.value }
+          newData: { ...formData.value, ...props.otherValue }
         })
       }
     }

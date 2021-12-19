@@ -5,7 +5,7 @@
       <template #footer>
         <div class="btns">
           <el-button @click="handleResetClick">重置</el-button>
-          <el-button type="primary" @click="searchClick">检索</el-button>
+          <el-button type="primary" @click="handleQueryClick">检索</el-button>
         </div>
       </template>
     </my-form-vue>
@@ -25,7 +25,7 @@ export default defineComponent({
   components: {
     myFormVue
   },
-  emits: ['searchBtnClick'],
+  emits: ['handleQueryClick'],
   setup(props, { emit }) {
     //双向绑定的属性应该是由配置文件中的field来决定的
     // 优化1：formData中的属性应该动态来决定
@@ -44,10 +44,10 @@ export default defineComponent({
       }
       formData.value = formDataRaw
     }
-    const searchClick = () => {
-      emit('searchBtnClick', formData.value)
+    const handleQueryClick = () => {
+      emit('handleQueryClick', formData.value)
     }
-    return { formData, handleResetClick, searchClick }
+    return { formData, handleResetClick, handleQueryClick }
   }
 })
 </script>
